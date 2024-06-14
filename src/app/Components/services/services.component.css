@@ -1,0 +1,168 @@
+body {
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.service-container {
+    margin: -15px 12px;
+    background-color: white;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.form {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    /* min-height: 510px; */
+}
+
+label {
+    font-weight: bold;
+    padding-bottom: 6px;
+    font-size: 14px;
+}
+
+.button-container {
+    width: 100%;
+    height: auto;
+    margin-top: 2rem;
+}
+
+.saveButton,
+.cancelButton {
+    font-size: 12px;
+    padding: 5px 11px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 200px; /* Limiting the width for better readability on smaller screens */
+}
+
+.saveButton {
+    background-color: #1e2e6f;
+}
+
+.cancelButton {
+    color: #1e2e6f;
+    background-color: transparent;
+    border: 1px solid #1e2e6f;
+}
+
+@media (max-width: 768px) {
+    .form {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    .form-group{
+        margin: 10px 0px 
+    }
+}
+
+@media (max-width: 480px) {
+    .service-container {
+        padding: 10px;
+    }
+
+    .button-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.service-data {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.clearButton{
+    font-size: 6px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    background-color: #1E2E6F;
+    color: white;
+}
+.noButton{
+    padding: 4px 10px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+.yesButton{
+    padding: 4px 10px;
+    border-radius: 5px;
+    background-color: #1E2E6F;
+    color: white;
+}
+/* your-component.component.css */
+.sidebar {
+    width: 250px;
+    height: 100%;
+    overflow-x: hidden;
+    transition: 0.3s;
+    /* padding: 10px; */
+    display: none;
+    border: 2px solid #1E2E6F;
+  }
+  
+  .sidebar.visible {
+    display: block;
+  }
+  
+  .main-content {
+    margin-left: 20px;
+    padding: 20px;
+    width: calc(100% - 250px);
+    transition: 0.3s;
+  }
+  
+  .main-content.sidebar-closed {
+    width: 100%;
+  }
+  
+  .pi-angle-left, .pi-angle-right {
+    cursor: pointer;
+  }
+  .service-item {
+    border: 1px solid #1E2E6F;
+    padding: 10px;
+    margin: 5px 0;
+  }
+  .clearDialogButton{
+    font-size: 9px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    background-color: #1E2E6F;
+    color: white;
+  }
+  .objectRow{
+    padding: 5px 0px; 
+    margin: 0; 
+    border-bottom: 1px solid #1E2E6F; 
+    height: 40px;
+  }
+  .objectRow:hover{
+    background-color: #1E2E6F;
+    color: white;
+    cursor: pointer;
+  }
+  
+  
+  

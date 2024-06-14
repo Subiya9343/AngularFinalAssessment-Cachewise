@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="div1">
+    <div class="logo">
+      <img src="assets/images/logo.png" width="300px" height="210px" alt="UCBOS CACHEWISENT">
+      <p style="color: #1E2E6F; font-weight: bolder;">UCBOS CACHEWISE</p>
+      <p style="font-weight: 500; font-size: 13px;">Tool for efficient memory management</p>
+    </div>
+  </div>
+  <div class="div2">
+    <div class="loginForm">
+      <app-snack-bar [errorMessage]="errorMessage" *ngIf="errorMessage">{{ errorMessage }}</app-snack-bar>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <h5 class="py-3">Sign In</h5>
+        <div class="field small">
+          <label for="email">Email</label>
+          <input id="email" type="text" formControlName="email">
+          <div *ngIf="loginForm.get('email').invalid && (loginForm.get('email').dirty || loginForm.get('email').touched)">
+            <span *ngIf="loginForm.get('email').errors.required">Email is required</span>
+            <span *ngIf="loginForm.get('email').errors.email">Invalid email</span>
+          </div>
+        </div>
+        <div class="field small">
+          <label for="password">Password</label>
+          <input id="password" type="password" formControlName="password">
+          <div *ngIf="loginForm.get('password').invalid && (loginForm.get('password').dirty || loginForm.get('password').touched)">
+            <span *ngIf="loginForm.get('password').errors.required">Password is required</span>
+            <span *ngIf="loginForm.get('password').errors.minlength">Password must be at least 8 characters</span>
+          </div>
+        </div>
+        <div>
+          <button type="submit" class="button">Login</button>
+        </div>
+        <div class="rem py-4 flex justify-content-between small">
+          <div>
+            <input type="checkbox" id="rm">
+            <label for="rm" class="px-2">Remember Me</label>
+          </div>
+          <div >
+            <a class="createAccLink" routerLink="/CreateAcc">Create Account</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+.header{
+    margin: 3px 19px;
+    display: flex;
+    justify-content: space-between;
+    width: 97%;
+}
+
+.userDetails {
+    display: flex;
+    align-items: center;
+}
+
+p {
+    font-size: 12px;
+    font-weight: 500;
+    color: #1E2E6F;
+}

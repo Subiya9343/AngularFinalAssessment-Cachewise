@@ -1,0 +1,101 @@
+body {
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+.perm-container {
+    margin: -15px 12px;
+}
+.card {
+    padding: 8px 20px;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+table {
+    width: 100%;
+    border-radius: 5px;
+}
+.table th {
+    background-color: #c5cceb; /* Set the background color for the header row */
+    padding: 7px 24px;
+    font-size: 14px;
+}
+.table tr {
+    border: 3px solid #e9ebf3;
+}
+td {
+    padding: 7px 24px;
+    font-size: 11px;
+    font-weight: 530;
+}
+.saveButton {
+    font-size: 10px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    background-color: #1E2E6F;
+    color: white;
+    margin-right: 44px;
+}
+.GoButton {
+    font-size: 10px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    background-color: #1E2E6F;
+    color: white;
+    margin-top: -25px;
+}
+.pageNumber {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -12px;
+    font-size: 13px;
+}
+::ng-deep .p-paginator {
+    font-size: 12px; /* Adjust the font size as needed */
+}
+::ng-deep .p-paginator.p-element {
+    margin-top: -20px;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1568px) {
+    .card {
+        padding: 10px;
+        min-height: auto;
+    }
+    .table th,
+    .table td {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    .saveButton,
+    .GoButton {
+        font-size: 11px;
+        padding: 6px 12px;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .table th,
+    .table td {
+        padding: 6px 10px;
+        font-size: 10px;
+    }
+    .saveButton{
+        margin-left: -22px;
+    }
+    .saveButton,
+    .GoButton {
+        font-size: 8px;
+        padding: 2px 6px;
+        /* margin-right: 5px; */
+    }
+}

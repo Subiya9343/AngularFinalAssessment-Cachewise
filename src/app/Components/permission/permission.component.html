@@ -1,0 +1,90 @@
+<app-header></app-header>
+
+<body>
+
+    <app-nav-bar></app-nav-bar>
+
+    <div class="perm-container">
+        <p-card>
+            <div class="card">
+                <div class="header">
+                    <div>
+                        <p style="font-size: 17px; font-weight: 580;">User Details</p>
+                    </div>
+                    <div>
+                        <div style="display: inline-flex;">
+                            <div><p-inputSwitch class="px-1" (click)="searchBar()"></p-inputSwitch></div>
+                            <p style="font-size: 18px;">|</p>
+                            <i class="pi pi-bars px-1" style="font-size: 1.5rem"></i>
+                            <i class="pi pi-stop" style="font-size: 1.5rem"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <p-toast></p-toast>
+                <!-- <p-confirmDialog [style]="{width: '50vw'}" key="positionDialog" [position]="position" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog> -->
+
+                <div class="table">
+                    <p-table #dt [value]="userData" [rows]="7" [globalFilterFields]="['username','mail']"
+                    dataKey="id">
+                        <ng-template pTemplate="header" class="heading">
+                            <tr style="border: 2px solid #c5cceb;">
+                                <th style="width:28%">User Name<i class="pi pi-sort-down-fill" style="margin-left: 15px;"></i></th>
+                                <th style="width:28%">Mail Is<i class="pi pi-sort-down-fill" style="margin-left: 15px;"></i></th>
+                                <th style="width:28%">Is managable</th>
+                                <th style="width:16%"></th>
+                            </tr>
+                            <tr style="border: 2px solid #c5cceb;" *ngIf="checked">
+                                <th>
+                                    <input pInputText type="text"
+                                        (input)="dt.filter($event.target.value, 'name', 'contains')"
+                                        placeholder="Search" class="p-column-filter">
+                                </th>
+                                <th>
+                                    <input pInputText type="text"
+                                        (input)="dt.filter($event.target.value, 'email', 'contains')"
+                                        placeholder="Search" class="p-column-filter">
+                                </th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </ng-template>
+                        <!-- <div *ngIf="userData.userType !== 'admin'"> -->
+                        <ng-template pTemplate="body" let-user>
+                            <tr>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <p-inputSwitch [(ngModel)]="user.permission" 
+                                                   (ngModelChange)="user.permission = !user.permission"
+                                                ></p-inputSwitch>
+                                </td>
+                                
+                                <td>
+                                    <button type="submit" (click)="save()" class="btn btn-save" class="saveButton" (click)="saveDetails(id,userType)">Save</button>
+                                    <i class="pi pi-trash" style="font-size: 1rem" (click)="deleteButton('top', user.id)"></i>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <!-- </div> -->
+                    </p-table>
+                    <div class="pageNumber" *ngIf="!isNull">
+                                <div>
+                                    <p>Showing {{first}} to {{last}} of {{totalRecords}} entries.</p>
+                                </div>
+                                <p-paginator [first]="first" [rows]="10" [totalRecords]="totalRecords"></p-paginator>
+                                </div>
+                            <!-- </div> -->
+                </div>
+                <div style="display: flex; justify-content: flex-end;">
+                <button type="button" class="GoButton">Go</button>
+                </div>
+            </div>
+        </p-card>
+    </div>
+
+
+    
+    <p-confirmDialog [style]="{width: '50vw'}" key="positionDialog" [position]="position" rejectButtonStyleClass="p-button-outlined"></p-confirmDialog>
+</body>
+

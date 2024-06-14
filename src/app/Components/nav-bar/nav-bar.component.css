@@ -1,0 +1,43 @@
+.container{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+ul{
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    padding-left: 12px;
+}
+
+li{
+    list-style-type: none;
+    margin-top: 10px;
+    margin-right: 3px;
+    background-color: #7B87B5;
+    font-size: 12px;
+    font-weight: 550;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    padding: 10px 15px; /* Reduce padding for smaller screens */
+    min-width: 150px; /* Set minimum width for items */
+    text-align: center; /* Center text */
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+.active{
+    background-color: #1E2E6F;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 426px) {
+    li {
+        padding: 8px 6px; /* Adjust padding for smaller screens */
+        min-width: auto; /* Allow items to shrink to fit content */
+        margin: 5px 3px; /* Adjust margin for smaller screens */
+    }
+}

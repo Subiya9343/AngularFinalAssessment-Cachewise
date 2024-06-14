@@ -1,0 +1,70 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.div2 {
+  background-color: #F8F8F8;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.div1 {
+  padding: 20px;
+}
+
+.logo {
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: calc(100% - 22px); /* Adjust width */
+  box-sizing: border-box;
+  border: 1px solid #1E2E6F;
+  border-radius: 4px;
+  height: 29px;
+  margin-bottom: 10px; /* Add margin */
+}
+
+.button {
+  width: calc(100% - 22px); /* Adjust width */
+  background-color: #1E2E6F;
+  color: white;
+  border-radius: 7px;
+  padding: 8px 0px; /* Adjust padding */
+  transition: background-color 0.3s ease; /* Add transition */
+}
+
+.button:hover {
+  background-color: #0d1b4c; /* Change background color on hover */
+}
+
+.loginForm {
+  width: 460px;
+  padding: 60px;
+}
+
+.createAccLink {
+  font-weight: 600;
+  font-size: 15px;
+  color: black;
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .div1,
+  .div2 {
+    margin-bottom: 20px;
+  }
+}
+
+span {
+  color: red;
+}
