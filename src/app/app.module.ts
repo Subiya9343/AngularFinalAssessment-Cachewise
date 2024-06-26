@@ -12,7 +12,6 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CreateAccComponent } from './Components/create-acc/create-acc.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { SnackBarComponent } from './Utility/snack-bar/snack-bar.component';
 import { HeaderComponent } from './Components/header/header.component';
 import { RouterModule } from '@angular/router';
 import { DialogBoxComponent } from './Components/dialog-box/dialog-box.component';
@@ -51,7 +50,6 @@ import { ClipboardModule } from 'ngx-clipboard';
     AppComponent,
     LoginComponent,
     CreateAccComponent,
-    SnackBarComponent,
     HeaderComponent,
     DialogBoxComponent,
     NavBarComponent,
