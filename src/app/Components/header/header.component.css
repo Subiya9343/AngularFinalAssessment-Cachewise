@@ -8,6 +8,13 @@
 .userDetails {
     display: flex;
     align-items: center;
+    color:#162542; 
+}
+.userDialog{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
 }
 
 p {
@@ -15,3 +22,23 @@ p {
     font-weight: 500;
     color: #1E2E6F;
 }
+.user-item{
+    display: flex;
+}
+.user-property{
+    font-size: 15px;
+    font-weight: 800;
+}
+.user-value{
+    padding-left: 6px;
+}
+::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    padding-top: 5px !important;
+    padding-left: 15px !important;
+}
+::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover{
+    border-top-right-radius: 5px !important;
+}
+

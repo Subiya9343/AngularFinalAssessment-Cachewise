@@ -8,7 +8,7 @@ export class UserDataService{
 
     constructor(private http: HttpClient){ }
 
-    addUserDetails(user: {name: string, email: string, password: string, userType : string, permission: string}){
+    addUserDetails(user: {name: string, email: string, password: string, userType : string, permission: boolean}){
     console.log(user);
     this.http.post('https://angular-final-assessment-default-rtdb.firebaseio.com/user-data.json',user)
     .subscribe((res) =>{
@@ -42,16 +42,7 @@ export class UserDataService{
     });
     }
 
-    updateData(id: string, data){
-        this.http.put('https://angular-final-assessment-default-rtdb.firebaseio.com/user-data/'+ id+'.json', data)
-    .subscribe({
-        next: () => {
-            console.log('Record deleted successfully:', id);
-          },
-          error: (error) => {
-            console.error('Error deleting record:', error);
-          }
-      
-    });
+    updateData(id:string, user:UserDetails){
+        return this.http.patch('https://angular-final-assessment-default-rtdb.firebaseio.com/user-data/'+ id+'.json', user)
    }
 }

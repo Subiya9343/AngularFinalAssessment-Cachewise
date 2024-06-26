@@ -1,6 +1,7 @@
+<app-loader [isVisible]="isLoading"></app-loader>
 <app-header></app-header>
 
-<body>
+<div class="body">
     <app-nav-bar></app-nav-bar>
 
     <div class="config-container">
@@ -10,32 +11,27 @@
                     <div>
                         <p style="font-size: 14px; font-weight: 550; width: 140px;">Company Name :</p>
                     </div>
+
+                    <!-- edit mode -->
                     <div class="p-inputgroup" style="display: block;">
                         <div *ngIf="isEditMode">
-                            <input type="text" pInputText style="height: 25px;" [(ngModel)]="newCompanyName"/>
-                            <button type="button" pButton icon="pi pi-plus" class="companyButton" (click)="addCompanyName()"></button>
+                            <input type="text" pInputText class="companyInputField" [(ngModel)]="newCompanyName" />
+                            <button type="button" pButton icon="pi pi-plus" class="companyButton"
+                                (click)="addCompanyName()"></button>
                         </div>
-                        <div style="display: flex; flex-wrap:nowrap;  margin-right: 5px;" *ngIf="isEditMode">
-                            <!-- <div class="p-inputgroup" style="display: inline-flex;"></div> -->
-                            <div class="p-inputgroup" style="display: inline-flex;" *ngFor="let companyName of companyNames; let i = index">
-                                <div style="display: inline;">
+                        <div style="display: flex;float: left;" *ngIf="isEditMode">
+                            <span class="p-inputgroup" style="display: inline-flex; margin-right: 12px;"
+                                *ngFor="let companyName of companyNames; let i = index">
+                                <div>
                                     <p class="companyParticularName">{{companyName}}</p>
-                                    <!-- <p>{{companyName}}</p> -->
                                 </div>
-                                <div><button type="button" pButton icon="pi pi-times"
+                                <div><button type="button" pButton icon="pi pi-times" style="border: none;"
                                         class="deleteCompanyButton" (click)="deleteCompanyName(i)"></button>
                                 </div>
-                            </div>
-                            <div class="p-inputgroup" style="display: inline-flex;" *ngFor="let temp of tempCompany; let i = index">
-                                <div style="display: inline;">
-                                    <p class="companyParticularName">{{tempCompany}}</p>
-                                    <!-- <p>{{companyName}}</p> -->
-                                </div>
-                                <div><button type="button" pButton icon="pi pi-times"
-                                        class="deleteCompanyButton" (click)="deleteCompanyName(i)"></button>
-                                </div>
-                            </div>
+                            </span>
                         </div>
+
+                        <!-- save mode -->
                         <div style="display: flex; font-size: 14px;" *ngIf="!isEditMode">
                             <div *ngFor="let companyName of companyNames; let last = last">
                                 <p>{{companyName}}{{!last ? ',' : ''}}</p>
@@ -48,10 +44,11 @@
                     <p-card>
                         <div style="display: inline-flex; height: 35px;" class="px-3 pt-3">
                             <p class="pr-3" style="font-size: 14px; font-weight: 700;">Environment</p>
-                            <button type="button" pButton icon="pi pi-plus" class="plusButton" (click)="addEnvironment()" *ngIf="isEditMode"></button>
+                            <button type="button" pButton icon="pi pi-plus" class="plusButton"
+                                (click)="addEnvironment()" *ngIf="isEditMode"></button>
                         </div>
                         <div class="table">
-                            <p-table [value]="environment.concat(tempEnvironment)" [rows]="3">
+                            <p-table [value]="environment" [rows]="3">
                                 <ng-template pTemplate="header" class="heading">
                                     <tr style="border: 2px solid #c5cceb;">
                                         <th style="width:50%">Name</th>
@@ -60,8 +57,12 @@
                                 </ng-template>
                                 <ng-template pTemplate="body" let-env>
                                     <tr *ngIf="isEditMode">
-                                        <td><input type="text" pInputText style="height: 25px; width: 30%; padding-left: 8px;" [(ngModel)]=env.name/></td>
-                                        <td><input type="text" pInputText style="height: 25px; width: 30%; padding-left: 8px;" [(ngModel)]=env.url/></td>
+                                        <td><input type="text" class="form-control" pInputText
+                                                style="height: 25px; width: 30%; padding-left: 8px;"
+                                                [(ngModel)]=env.name /></td>
+                                        <td><input type="text" class="form-control" pInputText
+                                                style="height: 25px; width: 30%; padding-left: 8px;"
+                                                [(ngModel)]=env.url /></td>
                                     </tr>
                                     <tr *ngIf="!isEditMode">
                                         <td>{{ env.name }}</td>
@@ -69,31 +70,37 @@
                                     </tr>
                                 </ng-template>
                             </p-table>
-                            <div class="pageNumber" *ngIf="!isEnvNull">
-                                <p-paginator [first]="first" [rows]="3" [totalRecords]="totalRecords" (onPageChange)="paginate($event)"></p-paginator>
+                            <div class="pageNumber" *ngIf="showEnvPaginator">
+                                <p-paginator [first]="first" [rows]="3" [totalRecords]="totalRecords"
+                                    (onPageChange)="paginate($event)"></p-paginator>
                             </div>
                         </div>
                     </p-card>
                 </div>
-                        <!-- ----------------servicesssssssssssss -->
-                <div class="environment">
+                <!-- ----------------services---------- -->
+                <div class="services">
                     <p-card>
                         <div style="display: inline-flex; height: 35px;" class="px-3 pt-2">
-                            <p class="pr-3"  style="font-size: 14px; font-weight: 700;">Services</p>
-                            <button type="button" pButton icon="pi pi-plus" class="plusButton" (click)="addService()" *ngIf="isEditMode"></button>
+                            <p class="pr-3" style="font-size: 14px; font-weight: 700;">Services</p>
+                            <button type="button" pButton icon="pi pi-plus" class="plusButton" (click)="addService()"
+                                *ngIf="isEditMode"></button>
                         </div>
                         <div class="table">
-                            <p-table [value]="services.concat(tempServices)" [rows]="3">
+                            <p-table [value]="services" [rows]="3">
                                 <ng-template pTemplate="header" class="heading">
                                     <tr style="border: 2px solid #c5cceb;">
                                         <th style="width:50%">Name</th>
-                                        <th style="width:50%">URL</th>
+                                        <th style="width:50%">Map Name</th>
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="body" let-serv>
                                     <tr *ngIf="isEditMode">
-                                        <td><input type="text" pInputText style="height: 25px; width: 30%; padding-left: 8px;" [(ngModel)]=serv.name/></td>
-                                        <td><input type="text" pInputText style="height: 25px; width: 30%; padding-left: 8px;" [(ngModel)]=serv.url/></td>
+                                        <td><input type="text" class="form-control" pInputText
+                                                style="height: 25px; width: 30%; padding-left: 8px;"
+                                                [(ngModel)]=serv.name /></td>
+                                        <td><input type="text" class="form-control" pInputText
+                                                style="height: 25px; width: 30%; padding-left: 8px;"
+                                                [(ngModel)]=serv.url /></td>
                                     </tr>
                                     <tr *ngIf="!isEditMode">
                                         <td>{{ serv.name }}</td>
@@ -101,18 +108,22 @@
                                     </tr>
                                 </ng-template>
                             </p-table>
-                            <div class="pageNumber" *ngIf="!isServNull">
-                                <p-paginator [first]="first" [rows]="3" [totalRecords]="totalRecords" (onPageChange)="paginate($event)"></p-paginator>
-                                </div>
+                            <div class="pageNumber" *ngIf="showSerPaginator">
+                                <p-paginator [first]="first" [rows]="3" [totalRecords]="totalRecords"
+                                    (onPageChange)="paginate($event)"></p-paginator>
                             </div>
+                        </div>
                     </p-card>
                     <div style="display: flex; justify-content: flex-end; margin-top: -10px;">
-                        <button type="button" class="btn btn-save" class="cancelButton" (click)="cancel()">Cancel</button>
-                        <button type="button" class="btn btn-save" class="saveButton" *ngIf="!isEditMode" (click)="edit()">Edit</button>
-                        <button type="submit" class="btn btn-save" class="saveButton" *ngIf="isEditMode" (click)="save()">Save</button>
+                        <button type="button" class="btn btn-save" class="cancelButton" *ngIf="isEditMode"
+                            (click)="cancel()">Cancel</button>
+                        <button type="button" class="btn btn-save" class="saveButton" *ngIf="!isEditMode"
+                            (click)="edit()">Edit</button>
+                        <button type="submit" class="btn btn-save" class="saveButton" *ngIf="isEditMode"
+                            (click)="save()">Save</button>
                     </div>
                 </div>
             </div>
         </p-card>
     </div>
-</body>
+</div>

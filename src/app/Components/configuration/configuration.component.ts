@@ -7,71 +7,58 @@ import { ConfigData, ConfigService } from '../../Services/config.service';
   styleUrl: './configuration.component.css'
 })
 export class ConfigurationComponent {
-  newCompanyName: string = ''; // Input field ngModel data
-  companyNames: any[] = []; // Array to store company names
-  tempCompany:any[]= [];
+  newCompanyName: string = '';
+  companyNames: any[] = [];
+  tempCompany: any[] = [];
   tempEnvironment: { name: string; url: string }[] = [];
   tempServices: { name: string; url: string }[] = [];
   configData;//Database
   errorMessage;
   environment: { name: string, url: string }[] = [];
   services: { name: string, url: string }[] = [];
-  isEmptyEnvironment: boolean;//---------------------------pending
   isEditMode: boolean = false;
   totalRecords
   first = 0;
   rows;
   ID = '';
-  isEnvNull
-  isServNull
+  showEnvPaginator: boolean
+  showSerPaginator: boolean
+  databaseEnvironment
+  isLoading: boolean = false;
 
 
   constructor(private configService: ConfigService) { }
 
   ngOnInit() {
-
     this.fetchConfigDetails();
-    // this.fetchCompanyDetails();
-    if(this.environment == null){
-      this.isEnvNull = true;
-    }
-    if(this.services == null){
-      this.isServNull = true;
-    }
-
   }
 
   addCompanyName() {
-    if (this.newCompanyName.trim() !== '') {
-      this.tempCompany.push(this.newCompanyName.trim());
-      this.newCompanyName = ''; // Clear the input field
+    if (this.newCompanyName != null && this.newCompanyName != '') {
+      this.companyNames.push(this.newCompanyName);
+      this.newCompanyName = '';
     }
   }
 
   addEnvironment() {
-    const lastTempEnv = this.tempEnvironment[this.tempEnvironment.length - 1];
+    const lastTempEnv = this.environment[this.environment.length - 1];
+    debugger;
     if (lastTempEnv && lastTempEnv.name.trim() !== '' && lastTempEnv.url.trim() !== '') {
-      this.tempEnvironment.push({ name: '', url: '' });
-    } else if (this.tempEnvironment.length === 0) {
-      this.tempEnvironment.push({ name: '', url: '' });
+      this.environment.push({ name: '', url: '' });
+    } else if (this.environment.length === 0) {
+      this.environment.push({ name: '', url: '' });
     }
-
-
-    // console.log(this.environment);
   }
 
-  // Method to add a service to the map
   addService() {
-    // Implement your logic to add a service
-    const lastTempSer = this.tempServices[this.tempServices.length - 1];
+    const lastTempSer = this.services[this.services.length - 1];
     if (lastTempSer && lastTempSer.name.trim() !== '' && lastTempSer.url.trim() !== '') {
-      this.tempServices.push({ name: '', url: '' });
-    } else if (this.tempServices.length === 0) {
-      this.tempServices.push({ name: '', url: '' });
+      this.services.push({ name: '', url: '' });
+    } else if (this.services.length === 0) {
+      this.services.push({ name: '', url: '' });
     }
   }
 
-  // Method to save data to the database
   saveDataToDatabase() {
     const data: ConfigData = {
       companyNames: this.companyNames,
@@ -83,56 +70,69 @@ export class ConfigurationComponent {
   }
 
   fetchConfigDetails() {
-
+    this.isLoading = true;
     this.configService.fetchConfigDetails().subscribe({
       next: (data) => {
+        this.companyNames = [];
+        this.tempCompany = [];
         this.configData = data;
         console.log(this.configData);
-
         let company = Object.values(this.configData.filter(conf => conf.id == 'companyNames')[0])
         company.pop();
-        // console.log(company);
-        this.companyNames = [...company];
+        this.companyNames = company;
+        this.tempCompany = [...this.companyNames];
 
         const envData = this.configData.find(conf => conf.id === 'environment');
         if (envData) {
           let env: { name: string, url: string }[] = Object.values(envData);
           env.pop();
-          // console.log(env);
           this.environment = [...env];
-        }
+          // this.environment = this.tempEnvironment
 
-        const serData = this.configData.find(conf => conf.id === 'services');
-        if (serData) {
-          let ser: { name: string, url: string }[] = Object.values(serData);
-          ser.pop();
-          console.log(ser);
-          this.services = [...ser];
+          if (this.environment.length > 3) {
+            this.showEnvPaginator = true
+          }
         }
+        this.fetchServiceData()
+
 
         this.totalRecords = this.companyNames.length;
       },
       error: (err) => {
         this.errorMessage = err.message;
         console.log("error: " + this.errorMessage);
+      },
+      complete: () => {
+        this.isLoading = false; // isLoading to false when completes
       }
     });
   }
-  edit(){
-    this.isEditMode = true;
+  fetchServiceData() {
+    const serData = this.configData.find(conf => conf.id === 'services');
+    if (serData) {
+      let ser: { name: string, url: string }[] = Object.values(serData);
+      ser.pop();
+      console.log(ser);
+      this.services = [...ser];
 
+      if (this.services.length > 3) {
+        this.showSerPaginator = true
+      }
+    }
+  }
+  edit() {
+    this.isEditMode = true;
   }
 
-
   save() {
-    for(let temp of this.tempCompany){
-      this.companyNames.push(temp);
-    }
-
     this.environment.push(...this.tempEnvironment);
+    this.services.push(...this.tempServices)
 
-    this.environment.push(...this.tempServices)
+    const filteredEnvironment = this.environment?.filter(x => x.name !== '' && x.name !== null);
+    const filteredServices = this.services?.filter(x => x.name !== '' && x.name !== null);
 
+    this.environment = filteredEnvironment
+    this.services = filteredServices
 
     if (this.configService.url == '') {
       this.saveDataToDatabase();
@@ -142,7 +142,7 @@ export class ConfigurationComponent {
         environment: this.environment,
         services: this.services
       };
-      console.log(data);
+      this.tempCompany = [...this.companyNames];
       this.configService.updateData(this.ID, data);
     }
     this.isEditMode = false;
@@ -153,14 +153,14 @@ export class ConfigurationComponent {
     this.rows = event.rows;
   }
 
-  cancel(){
+  cancel() {
     this.isEditMode = false;
-    this.tempEnvironment = []
-    this.tempServices = []
-
+    this.tempEnvironment = [];
+    this.tempServices = [];
+    this.companyNames = [...this.tempCompany];
   }
 
-  deleteCompanyName(index){
+  deleteCompanyName(index) {
     if (index > -1 && index < this.companyNames.length) {
       this.companyNames.splice(index, 1);
     }

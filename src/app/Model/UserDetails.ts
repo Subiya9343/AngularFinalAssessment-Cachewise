@@ -1,6 +1,7 @@
 export class UserDetails{
     name: string;
     email: string;
-    permission: string;
-    userType:string
+    permission: boolean;
+    userType:string;
+    id?: string
 }

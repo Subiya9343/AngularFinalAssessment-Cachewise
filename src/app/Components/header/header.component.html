@@ -3,9 +3,24 @@
         <img src="assets/images/logo.png" width="60px" height="40px" alt="UCBOS CACHEWISENT">
     </div>
     <div class="userDetails">
-        <i class="pi pi-spin pi-cog mr-1" style="font-size: 1.2rem" (click)="dialogBox()"></i>
-        <p class="m-1">SSR</p>
-        <img src="assets/images/pexels-danxavier-1239291.jpg" width="35px" height="32px" class="mx-2" alt="User Image" style="border-radius: 12px;">
+        <i class="pi pi-spin pi-cog mr-1" style="font-size: 1.2rem" (click)="dialogBoxComponent()"></i>
+        <p class="m-1">{{ loggedUserName }}</p>
+        <img src="assets/images/pexels-danxavier-1239291.jpg" (click)="displayUserDetails()" width="35px" height="32px" class="mx-2" alt="User Image" style="border-radius: 12px;">
         <i class="pi pi-sign-out" style="font-size: 1.2rem;" (click)="logOut()"></i>
     </div>
 </div>
+
+<p-dialog header="User Details" [(visible)]="displayUserDialog" [style]="{'margin-top.px': 60, 'width.px': '400', 'height.px': '150'}" [modal]="true">
+    <div class="userDialog">
+      <div class="user-item">
+        <div class="user-property">Name: </div>
+        <div class="user-value">{{ loggedUserName}}</div>
+      </div>
+   
+      <div class="user-item">
+        <div class="user-property">Email: </div>
+        <div class="user-value">{{ loggedUserEmail}}</div>
+      </div>
+
+    </div>
+  </p-dialog>

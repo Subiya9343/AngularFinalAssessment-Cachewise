@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfigService } from '../../Services/config.service';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../Services/auth.service';
+import { ServicesDataService } from '../../Services/servicesData.service';
 
 interface SelectItem {
   label: string;
@@ -21,33 +23,60 @@ export class DialogBoxComponent implements OnInit {
   configData: any;
   errorMessage: string = '';
   envName: string[] = [];
+  envValue: string[] = []
   environmentDropdown: { name: string, url: string }[] = [];
   showDialog: boolean = true;
+  isAdminLogged
+  serviceUrl
+  environmentURL
+  serviceToken
+  filteredEnvironment: any[]
+  checkUserOrAdmin:string
+  displayCancelButton: boolean
 
-  constructor(private router: Router, private configService: ConfigService, private http: HttpClient) { }
-
+  constructor(private router: Router, private configService: ConfigService, private http: HttpClient, private authService: AuthService, private serviceData: ServicesDataService) { }
+  
   ngOnInit(): void {
     this.cardForm = new FormGroup({
       environment: new FormControl('', Validators.required),
-      token: new FormControl('')
+      servToken: new FormControl('', [Validators.required, this.notOnlyWhitespace()])
     });
 
     this.fetchConfigDetails();
+    this.checkUserorAdmin();
+    
   }
 
   onSubmit(): void {
     console.log(this.cardForm.value);
     const data = {
       environment: this.cardForm.value.environment, 
-      token: this.cardForm.value.token
+      servToken: this.cardForm.value.servToken
     };
-    this.addEnvironmentDetails(data);
+    localStorage.setItem('environment', data.environment);
+    localStorage.setItem('serviceToken', data.servToken);
+
+    
+    this.serviceData.setHttpHeaders();
+
+    if(localStorage.getItem('isAdminLogged') === 'true'){
+      localStorage.setItem('isAdminLogged', 'true')
+    }
+    this.authService.isUserLogged = true
     this.router.navigate(['/Services']);
+  }
+
+  checkUserorAdmin(){
+    this.checkUserOrAdmin = localStorage.getItem('loggedInUserPermission')
+    if(this.checkUserOrAdmin === 'true'){
+      this.displayCancelButton = true
+    }
   }
 
   cancel(): void {
     this.cardForm.reset();
     this.showDialog = false;
+    this.router.navigate(['/Permission'])
   }
 
   fetchConfigDetails(): void {
@@ -59,15 +88,16 @@ export class DialogBoxComponent implements OnInit {
         const envData = this.configData.find((conf: any) => conf.id === 'environment');
         if (envData) {
           const env: { name: string, url: string }[] = Object.values(envData);
-          env.pop(); // Remove the last item if it's not an environment configuration
+          env.pop(); 
           this.environmentDropdown = [...env];
 
           this.environmentOptions = this.environmentDropdown.map(item => ({
             label: item.name,
-            value: item.name
+            value: item.url
           }));
         }
         this.envName = this.environmentDropdown.map(item => item.name);
+        this.envValue = this.environmentDropdown.map(item => item.url);
       },
       error: (err) => {
         this.errorMessage = err.message;
@@ -75,11 +105,28 @@ export class DialogBoxComponent implements OnInit {
       }
     });
   }
+  filterEnvironment(event) {
+    let filtered: any[] = [];
+    let query = event.query;
 
-  addEnvironmentDetails(env: { environment: string, token: string }): void {
-    this.http.post('https://angular-final-assessment-default-rtdb.firebaseio.com/environment-data.json', env)
-      .subscribe((res) => {
-        console.log(res);
-      });
+    for (let i = 0; i < this.envName.length; i++) {
+        let environment = this.envName[i];
+        if (environment.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+            filtered.push(environment);
+        }
+    }
+
+    this.filteredEnvironment = filtered;
   }
+
+    // Custom validator function to check for whitespace
+  notOnlyWhitespace(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    if (control.value && control.value.trim().length === 0) {
+      return { 'notOnlyWhitespace': true }; 
+    }
+    return null; 
+  };
+}
+
 }

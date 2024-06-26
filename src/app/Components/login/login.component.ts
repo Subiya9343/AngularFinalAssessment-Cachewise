@@ -4,6 +4,7 @@ import { AuthService } from '../../Services/auth.service';
 import { Observable } from 'rxjs';
 import { AuthResponse } from '../../Model/AuthResponse';
 import { Router } from '@angular/router';
+import { UserDetails } from '../../Model/UserDetails';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,9 @@ export class LoginComponent implements OnInit{
   loginForm: FormGroup;
   errorMessage: string | null = null; 
   authObs:Observable<AuthResponse>
-  isAdminLogged = false
+  fetchedUsersDetails: UserDetails[];
+  loggedInUserDetail: UserDetails;
+  loggedInSuccessfull:boolean
 
   constructor(private authService: AuthService, private router: Router){ }
 
@@ -38,32 +41,44 @@ export class LoginComponent implements OnInit{
       {
         next: (res) => {
           console.log("Success:", res);
-          if(email == 'admin@gmail.com' && password == 'aaaaaaaa'){
-            this.authService.isAdminLogged = true
-            this.authService.isUserLogged = false
-            this.router.navigate(['/Configuration'])
-            }else{
-              this.authService.isAdminLogged = false
-              this.authService.isUserLogged = true
-              this.router.navigate(['/DialogBox']);
+          
+          this.loggedInSuccessfull = true
+
+          this.authService.fetchUserDetails().subscribe(data => {
+            this.fetchedUsersDetails = data;
+            const loggedInUser = this.fetchedUsersDetails?.filter(x=> x.email === this.loginForm.value.email);
+            if (loggedInUser?.length > 0) {
+              this.loggedInUserDetail = loggedInUser[0];
+
+              // converting boolean to string
+              localStorage.setItem('loggedInUserPermission', this.loggedInUserDetail.permission + '');
+              localStorage.setItem('loggedUserName', this.loggedInUserDetail.name);
+              localStorage.setItem('loggedUserEmail', this.loggedInUserDetail.email);
+
+              if (this?.loggedInUserDetail?.permission === true) {
+                // User is ADMIN
+                localStorage.setItem('isAdminLogged', 'true');
+                localStorage.setItem('isUserLogged', 'false');
+                this.loginForm.reset();
+                this.router.navigate(['/Permission'])
+              } else {
+                // Logged in User is USER.
+                localStorage.setItem('isAdminLogged', 'false');
+                localStorage.setItem('isUserLogged', 'true');
+                this.router.navigate(['/DialogBox']); 
+              }
             }
+          })
         },
         error: (errMsg) => {
           console.log("Error:", errMsg);
           this.errorMessage = errMsg;
-          this.hideSnackBar();
+          alert(this.errorMessage);
         },
         complete: () => {
           console.log("Observable completed");
         }
       }
     );
-    this.loginForm.reset();
-  }
-  
-  hideSnackBar(){
-    setTimeout(() =>{
-      this.errorMessage = null;
-    }, 3000);
   }
 }

@@ -1,10 +1,10 @@
 <div class="container">
     <div class="nav-bar">
         <ul>
-            <li *ngIf="isAdminLogged" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"><a routerLink="/Permission">Permission</a></li>
-            <li *ngIf="isAdminLogged" routerLinkActive="active"><a routerLink="/Configuration">Configuration</a></li>
-            <li *ngIf="isUserLogged" routerLinkActive="active"><a routerLink="/Services">Services</a></li>
-            <li *ngIf="isUserLogged" routerLinkActive="active"><a routerLink="/CleanUp">CleanUp</a></li>
+            <li routerLink="/Permission" *ngIf="isAdminLogged" routerLinkActive="active"><a >Permission</a></li>
+            <li routerLink="/Configuration" *ngIf="isAdminLogged" routerLinkActive="active"><a>Configuration</a></li>
+            <li routerLink="/Services" *ngIf="isUserLogged" routerLinkActive="active"><a>Services</a></li>
+            <li routerLink="/CleanUp" *ngIf="isUserLogged" routerLinkActive="active"><a>CleanUp</a></li>
         </ul>
     </div>
 </div>

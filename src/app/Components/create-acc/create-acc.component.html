@@ -9,50 +9,52 @@
     </div>
     <div class="div2">
       <div class="createAccForm">
-        <app-snack-bar [errorMessage]="errorMessage" *ngIf="errorMessage">{{ errorMessage }}</app-snack-bar>
+        
         <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
           <h5 class="py-3">Create Account</h5>
           <div class="field small">
-            <label for="name">Name</label>
-            <input id="name" type="text" formControlName="name">
+            <label for="name">Name *</label>
+            <input id="name" type="text" formControlName="name" class="form-control">
             <div *ngIf="createAccountForm.get('name').invalid && (createAccountForm.get('name').dirty || createAccountForm.get('name').touched)">
                 <span *ngIf="createAccountForm.get('name').errors.required">Name is required</span>
               </div>
           </div>
           <div class="field small">
-            <label for="email">Email</label>
-            <input id="email" type="text" formControlName="email">
+            <label for="email">Email *</label>
+            <input id="email" type="text" formControlName="email" class="form-control">
             <div *ngIf="createAccountForm.get('email').invalid && (createAccountForm.get('email').dirty || createAccountForm.get('email').touched)">
                 <span *ngIf="createAccountForm.get('email').errors.required">Email is required</span>
-                <span *ngIf="createAccountForm.get('email').errors.email">Invalid email</span>
+                <span *ngIf="createAccountForm.get('email').errors?.email">Invalid email</span>
               </div>
           </div>
           <div class="field small">
-            <label for="password">Password</label>
-            <input id="password" type="password" formControlName="password">
+            <label for="password">Password *</label>
+            <input id="password" type="password" formControlName="password" class="form-control">
             <div *ngIf="createAccountForm.get('password').invalid && (createAccountForm.get('password').dirty || createAccountForm.get('password').touched)">
                 <span *ngIf="createAccountForm.get('password').errors.required">Password is required</span>
                 <span *ngIf="createAccountForm.get('password').errors.minlength">Password must be at least 8 characters</span>
               </div>
           </div>
           <div class="field small">
-            <label for="confirmpassword">Confirm Password</label>
-            <input id="confirmpassword" type="password" formControlName="confirmPassword">
+            <label for="confirmpassword">Confirm Password *</label>
+            <input id="confirmpassword" type="password" formControlName="confirmPassword" class="form-control">
             <div *ngIf="createAccountForm.get('confirmPassword').invalid && (createAccountForm.get('confirmPassword').dirty || createAccountForm.get('confirmPassword').touched)">
                 <span *ngIf="createAccountForm.get('confirmPassword').errors.required">Confirm Password is required</span>
                 <span *ngIf="createAccountForm.get('confirmPassword').errors.mismatch">Passwords do not match</span>
               </div>
           </div>
+
           <div>
               <button type="submit" class="button" [disabled]="createAccountForm.invalid">Sign Up</button>
           </div>
-          <div class="rem py-4 flex justify-content-center small">
+          <div class="py-4 flex justify-content-center small">
             <div >
-              <a class="createAccLink" routerLink="/Login">Login</a>
+              <a class="login" routerLink="/Login">Login</a>
             </div>
           </div>
         </form>
       </div>
     </div>
+
   </div>
   

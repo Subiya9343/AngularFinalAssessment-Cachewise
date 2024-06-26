@@ -11,7 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CreateAccComponent } from './Components/create-acc/create-acc.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { SnackBarComponent } from './Utility/snack-bar/snack-bar.component';
 import { HeaderComponent } from './Components/header/header.component';
 import { RouterModule } from '@angular/router';
@@ -37,6 +37,14 @@ import { ChipsModule } from 'primeng/chips';
 import { ServicesComponent } from './Components/services/services.component';
 import { CleanupComponent } from './Components/cleanup/cleanup.component';
 import { DialogModule } from 'primeng/dialog';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+// import { AuthInterceptor} from './Auth/auth-interceptor.service';
+import { AuthService } from './Services/auth.service';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { AutofocusDirective } from './Directive/autofocus.directive';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { LoaderComponent } from './Utility/loader/loader.component';
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
   declarations: [
@@ -50,7 +58,9 @@ import { DialogModule } from 'primeng/dialog';
     PermissionComponent,
     ConfigurationComponent,
     ServicesComponent,
-    CleanupComponent
+    CleanupComponent,
+    AutofocusDirective,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -72,15 +82,33 @@ import { DialogModule } from 'primeng/dialog';
     InputTextModule,
     PaginatorModule,
     ChipsModule,
-    DialogModule
+    DialogModule,
+    ConfirmPopupModule,
+    OverlayPanelModule,
+    AutoCompleteModule,
+    ClipboardModule
   ],
   providers: [
-    provideFirebaseApp(() => initializeApp({"projectId":"angular-final-assessment","appId":"1:210966184486:web:3f99b48d24f1a46defdce7","databaseURL":"https://angular-final-assessment-default-rtdb.firebaseio.com","storageBucket":"angular-final-assessment.appspot.com","apiKey":"AIzaSyCSNMYxiv1c_3GYeoksksFxyRhuwBh5apg","authDomain":"angular-final-assessment.firebaseapp.com","messagingSenderId":"210966184486"})),
+    provideFirebaseApp(() => initializeApp({
+      "projectId": "angular-final-assessment",
+      "appId": "1:210966184486:web:3f99b48d24f1a46defdce7",
+      "databaseURL": "https://angular-final-assessment-default-rtdb.firebaseio.com",
+      "storageBucket": "angular-final-assessment.appspot.com",
+      "apiKey": "YOUR_API_KEY",
+      "authDomain": "angular-final-assessment.firebaseapp.com",
+      "messagingSenderId": "210966184486"
+    })),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideDatabase(() => getDatabase()),
     ConfirmationService,
-    MessageService
+    MessageService,
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: AuthInterceptor,
+    //   multi: true
+    // },
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

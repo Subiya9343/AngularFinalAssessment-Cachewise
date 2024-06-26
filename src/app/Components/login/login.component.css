@@ -22,26 +22,24 @@
 
 input[type="text"],
 input[type="password"] {
-  width: calc(100% - 22px); /* Adjust width */
+  width: calc(100% - 22px); 
   box-sizing: border-box;
   border: 1px solid #1E2E6F;
   border-radius: 4px;
   height: 29px;
-  margin-bottom: 10px; /* Add margin */
+  margin-bottom: 10px; 
 }
 
 .button {
-  width: calc(100% - 22px); /* Adjust width */
+  width: calc(100% - 22px); 
+  height: 33px;
   background-color: #1E2E6F;
   color: white;
   border-radius: 7px;
-  padding: 8px 0px; /* Adjust padding */
-  transition: background-color 0.3s ease; /* Add transition */
+  margin-top: 7px;
+  font-size: 14px; 
 }
 
-.button:hover {
-  background-color: #0d1b4c; /* Change background color on hover */
-}
 
 .loginForm {
   width: 460px;
@@ -50,8 +48,13 @@ input[type="password"] {
 
 .createAccLink {
   font-weight: 600;
-  font-size: 15px;
+  font-size: 13px;
   color: black;
+  margin-right: 21px;
+}
+.rememberMe{
+  font-size: 14px;
+  margin-left: 5px;
 }
 
 @media (max-width: 768px) {
@@ -67,4 +70,7 @@ input[type="password"] {
 
 span {
   color: red;
+}
+button[disabled]{
+  background-color: #556294;
 }

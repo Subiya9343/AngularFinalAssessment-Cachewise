@@ -1,8 +1,7 @@
-body {
+.body {
     background-color: #f2f2f2;
     margin: 0;
     padding: 0;
-    width: 100%;
     height: 100%;
 }
 
@@ -10,16 +9,8 @@ body {
     margin: -15px 12px;
     background-color: white;
     padding: 20px;
-    width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-}
-
-.form {
-    display: flex;
-    flex-wrap: nowrap;
-    width: 100%;
-    /* min-height: 510px; */
 }
 
 label {
@@ -28,70 +19,50 @@ label {
     font-size: 14px;
 }
 
-.button-container {
-    width: 100%;
-    height: auto;
-    margin-top: 2rem;
-}
-
 .saveButton,
 .cancelButton {
     font-size: 12px;
-    padding: 5px 11px;
+    padding: 0px 14px;
+    height: 30px;
     border-radius: 4px;
     font-weight: bold;
     color: white;
-    margin-bottom: 10px;
-    width: 100%;
-    max-width: 200px; /* Limiting the width for better readability on smaller screens */
+    margin-top: 28px;
 }
 
 .saveButton {
     background-color: #1e2e6f;
 }
 
+button[disabled] {
+    background-color: #556294;
+}
+
 .cancelButton {
     color: #1e2e6f;
     background-color: transparent;
     border: 1px solid #1e2e6f;
+    margin-right: 1rem;
 }
 
-@media (max-width: 768px) {
-    .form {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .button-container {
-        display: flex;
-        justify-content: center;
-        justify-content: center;
-        margin-top: 10px;
-    }
-    .form-group{
-        margin: 10px 0px 
-    }
+.data-not-found-style p {
+    margin-bottom: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    background-color: rgb(231, 163, 163);
 }
 
-@media (max-width: 480px) {
-    .service-container {
-        padding: 10px;
-    }
-
-    .button-container {
-        flex-direction: column;
-        align-items: center;
-    }
+.objectRow:hover {
+    cursor: pointer;
 }
 
 .service-data {
-    width: 100%;
     margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
 }
 
-.clearButton{
+.clearButton {
     font-size: 6px;
     padding: 4px 10px;
     border-radius: 4px;
@@ -99,70 +70,209 @@ label {
     background-color: #1E2E6F;
     color: white;
 }
-.noButton{
+.dialogSideBar{
+    height: 78vh; 
+    overflow-y: auto; 
+    padding-right: 23px; 
+    position: relative;
+}
+
+.noButton {
     padding: 4px 10px;
     border-radius: 5px;
     margin-right: 5px;
+    font-size: 11px;
 }
-.yesButton{
+
+.yesButton {
     padding: 4px 10px;
     border-radius: 5px;
     background-color: #1E2E6F;
     color: white;
+    font-size: 11px;
 }
-/* your-component.component.css */
-.sidebar {
-    width: 250px;
-    height: 100%;
-    overflow-x: hidden;
-    transition: 0.3s;
-    /* padding: 10px; */
-    display: none;
-    border: 2px solid #1E2E6F;
-  }
-  
-  .sidebar.visible {
-    display: block;
-  }
-  
-  .main-content {
-    margin-left: 20px;
-    padding: 20px;
-    width: calc(100% - 250px);
-    transition: 0.3s;
-  }
-  
-  .main-content.sidebar-closed {
-    width: 100%;
-  }
-  
-  .pi-angle-left, .pi-angle-right {
-    cursor: pointer;
-  }
-  .service-item {
+
+.pi-question-circle {
+    font-size: 20px;
+}
+
+.p-style {
+    margin: 0;
+    padding: 0.6rem;
     border: 1px solid #1E2E6F;
-    padding: 10px;
-    margin: 5px 0;
-  }
-  .clearDialogButton{
+}
+
+.left-icon-style {
+    font-size: 1.4rem;
+    z-index: 1;
+    background-color: white;
+}
+
+.right-icon-style {
+    font-size: 1.3rem;
+    position: absolute;
+    top: 3rem;
+    left: 0rem;
+    z-index: 1;
+}
+
+.pi-copy {
+    display: flex;
+    justify-content: end;
+    padding-top: 8px;
+    padding-right: 8px;
+}
+
+.serviceDialogData {
+    padding: 0px 20px;
+}
+.selected{
+    background-color: #1E2E6F;
+    color: white;
+}
+
+.pi-angle-left,
+.pi-angle-right {
+    cursor: pointer;
+}
+
+.ui-button-secondary {
     font-size: 9px;
     padding: 4px 10px;
     border-radius: 4px;
     font-weight: bold;
     background-color: #1E2E6F;
     color: white;
-  }
-  .objectRow{
-    padding: 5px 0px; 
-    margin: 0; 
-    border-bottom: 1px solid #1E2E6F; 
-    height: 40px;
-  }
-  .objectRow:hover{
+    margin-right: 25px;
+    margin-bottom: 7px;
+}
+
+.overlayClearButton {
+    display: flex;
+    justify-content: center;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: bold;
     background-color: #1E2E6F;
     color: white;
-    cursor: pointer;
-  }
-  
-  
-  
+}
+
+@media (max-width: 1024px) {
+    .service-container {
+        margin: 0;
+        padding: 0;
+    }
+
+    .gridForm {
+        display: grid;
+        grid-template-columns: 1;
+        grid-row: 4;
+        justify-content: center;
+        align-items: center;
+    }
+
+    label {
+        width: 260px;
+        display: flex;
+        align-items: center;
+    }
+
+    .error {
+        width: 320px;
+    }
+
+    .button-container {
+        display: flex;
+        margin-left: 59px;
+    }
+
+    .form-group {
+        margin: 10px 0px
+    }
+}
+
+::ng-deep .p-overlaypanel {
+    width: 52px;
+    height: 28px;
+    overflow: hidden;
+}
+
+.grid {
+    width: 100%;
+}
+
+.form-control {
+    font-size: 17px;
+    box-shadow: 0 0 0 0.2rem white;
+}
+
+/* toast */
+::ng-deep .p-toast .p-toast-message .p-toast-message-content {
+    height: 68px;
+    padding: 7px 0px;
+}
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content .p-icon:not(.p-toast-icon-close-icon) {
+    margin-left: 7px !important;
+    margin-top: 15px !important;
+    width: 25px !important;
+    height: 25px !important
+}
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content .p-toast-detail {
+    padding-left: 20px !important;
+    padding-top: 10px !important;
+}
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content .p-toast-summary {
+    padding-left: 20px !important;
+}
+
+/* autocomplete styles */
+::ng-deep .p-inputtext {
+    padding-left: 10px;
+    border-right: 1px solid white !important;
+}
+
+::ng-deep .p-autocomplete-dd .p-autocomplete-dropdown {
+    background-color: white;
+    border-top: 1px solid rgb(190, 190, 190);
+    border-right: 1px solid rgb(190, 190, 190);
+    border-bottom: 1px solid rgb(190, 190, 190);
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left: 1px solid white !important;
+    margin-left: -2px !important;
+}
+
+::ng-deep .p-autocomplete-dd .p-autocomplete-dropdown:hover {
+    border: 1px solid #3B82F6;
+    border-left: 1px solid white !important;
+}
+
+::ng-deep .p-icon {
+    color: black;
+}
+
+::ng-deep .p-autocomplete-panel .p-autocomplete-items {
+    padding-left: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+::ng-deep .p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item {
+    padding: 10px !important;
+}
+
+::ng-deep .p-inputtext:enabled:focus {
+    box-shadow: 0 0 0 0.2rem white !important;
+}
+::ng-deep .p-autocomplete.p-autocomplete-dd .p-autocomplete-loader {
+    color: white !important;
+}
+
+
+/* service dialog box */
+::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
+    padding: 8px 20px !important;
+}

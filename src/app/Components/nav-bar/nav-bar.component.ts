@@ -10,11 +10,20 @@ export class NavBarComponent {
   isAdminLogged
   isUserLogged
 
-  constructor(private authService: AuthService){ }
-
   ngOnInit(){
-    this.isAdminLogged = this.authService.isAdminLogged;
-    this.isUserLogged = this.authService.isUserLogged;
+    const isAdminString = localStorage.getItem('isAdminLogged');
+    if (isAdminString!== null) {
+      this.isAdminLogged = JSON.parse(isAdminString);
+    } else {
+      this.isAdminLogged = false;
+    }
+    const isUserString = localStorage.getItem('isUserLogged');
+    if (isUserString!== null) {
+      this.isUserLogged = JSON.parse(isUserString);
+    } else {
+      this.isUserLogged = false;
+    }
+    
   }
 
 }

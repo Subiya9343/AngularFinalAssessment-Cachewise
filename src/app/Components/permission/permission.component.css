@@ -1,101 +1,315 @@
-body {
+.body {
     background-color: #f2f2f2;
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
 }
+
 .perm-container {
     margin: -15px 12px;
 }
+
 .card {
-    padding: 8px 20px;
+    padding: 8px 15px;
 }
+
 .header {
     display: flex;
     justify-content: space-between;
 }
-table {
+
+.table {
     width: 100%;
     border-radius: 5px;
+    margin-top: -17px;
+    padding: 0px;
 }
+
 .table th {
-    background-color: #c5cceb; /* Set the background color for the header row */
-    padding: 7px 24px;
-    font-size: 14px;
+    background-color: #c5cceb;
+    padding: 5px 24px 5px 24px;
+    font-size: 12px;
+    cursor: pointer;
 }
+
 .table tr {
     border: 3px solid #e9ebf3;
 }
+
+.table tr:hover {
+    background-color: #ededf3;
+}
+
 td {
-    padding: 7px 24px;
+    padding-left: 24px;
     font-size: 11px;
     font-weight: 530;
+    cursor: pointer;
 }
+
 .saveButton {
-    font-size: 10px;
+    font-size: 9px;
     padding: 4px 12px;
     border-radius: 4px;
     font-weight: bold;
     background-color: #1E2E6F;
     color: white;
-    margin-right: 44px;
+    margin-right: 20px;
 }
+
 .GoButton {
-    font-size: 10px;
-    padding: 4px 12px;
+    font-size: 9px;
+    padding: 0px 11px;
+    margin-right: 10px;
     border-radius: 4px;
+    height: 28px;
     font-weight: bold;
     background-color: #1E2E6F;
     color: white;
-    margin-top: -25px;
 }
+
+.pageCount {
+    margin-top: -5px;
+}
+
 .pageNumber {
     display: flex;
     justify-content: space-between;
-    margin-top: -12px;
     font-size: 13px;
 }
-::ng-deep .p-paginator {
-    font-size: 12px; /* Adjust the font size as needed */
-}
-::ng-deep .p-paginator.p-element {
-    margin-top: -20px;
+
+/* row per page dropdown */
+.rows-per-page-options {
+    position: absolute;
+    top: 18px;
+    right: -10px;
+    z-index: 1000;
+    background-color: white;
+    border: 1px solid #1E2E6F;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Media queries for responsiveness */
-@media (max-width: 1568px) {
-    .card {
-        padding: 10px;
-        min-height: auto;
-    }
-    .table th,
-    .table td {
-        padding: 8px 12px;
-        font-size: 12px;
-    }
-    .saveButton,
-    .GoButton {
-        font-size: 11px;
-        padding: 6px 12px;
-        margin-right: 10px;
-        margin-top: 10px;
-    }
+.tablePageNumber {
+    list-style-type: none;
+}
+
+ul {
+    padding-left: 0px;
+    margin-bottom: 6px;
+}
+
+li {
+    margin-bottom: -7px;
+    list-style-type: none;
+}
+
+.rowsPerPageButton {
+    padding: 8px 5px;
+    font-size: 13px;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.rowsPerPageButton:hover {
+    background-color: #1E2E6F;
+    color: white;
+}
+
+.pageSelectedBox {
+    font-size: 10px;
+    font-weight: 600;
+    border: 1.3px solid black;
+    height: 15px;
+    padding: 0px 4px 4px 4px;
+    cursor: pointer;
 }
 
 @media (max-width: 576px) {
+
     .table th,
     .table td {
         padding: 6px 10px;
         font-size: 10px;
     }
-    .saveButton{
+
+    .saveButton {
         margin-left: -22px;
     }
+
     .saveButton,
     .GoButton {
         font-size: 8px;
         padding: 2px 6px;
-        /* margin-right: 5px; */
     }
+}
+
+::ng-deep .custom-inputswitch .p-inputswitch-slider {
+    width: 26px;
+    height: 12px;
+}
+
+::ng-deep .custom-inputswitch .p-inputswitch-slider::before {
+    width: 8px;
+    height: 9px;
+    margin-top: -5px;
+    margin-left: -3px;
+}
+
+::ng-deep .custom-inputswitch {
+    width: 40px;
+    height: 20px;
+    margin-right: -10px;
+    margin-top: 20px;
+}
+
+/* table input switch    */
+::ng-deep .custom-dialogInputswitch .p-inputswitch-slider {
+    width: 26px;
+    height: 12px;
+    margin-top: 10px;
+}
+
+::ng-deep .custom-dialogInputswitch .p-inputswitch-slider::before {
+    width: 9px;
+    height: 9px;
+    margin-top: -4.5px;
+    margin-left: -3px;
+}
+
+::ng-deep .custom-dialogInputswitch {
+    width: 40px;
+    height: 20px;
+    margin-right: -10px;
+    margin-top: 20px;
+}
+
+::ng deep .pi.pi-sort-down-fill {
+    height: 5px;
+    width: 5px;
+}
+
+.noButton {
+    padding: 3px 7px;
+    border-radius: 5px;
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+.yesButton {
+    padding: 3px 7px;
+    border-radius: 5px;
+    background-color: #1E2E6F;
+    color: white;
+    font-size: 12px;
+}
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content {
+    height: 68px;
+    padding: 7px 0px;
+}
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content .p-icon:not(.p-toast-icon-close-icon) {
+    margin-left: 7px !important;
+    margin-top: 15px !important;
+    width: 25px !important;
+    height: 25px !important
+}
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content .p-toast-detail {
+    padding-left: 20px !important;
+    padding-top: 10px !important;
+}
+
+::ng-deep .p-toast .p-toast-message .p-toast-message-content .p-toast-summary {
+    padding-left: 20px !important;
+}
+
+::ng-deep .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before {
+    transform: translateX(0.9rem);
+}
+
+::ng-deep .p.dialog {
+    margin-top: 30px !important;
+}
+
+.pi.pi-question-circle {
+    font-size: 25px !important;
+}
+
+::ng-deep .p-inputtext {
+    padding-left: 10px !important;
+}
+
+/* paginator */
+
+:host ::ng-deep .p-paginator {
+    flex-wrap: nowrap !important;
+    /* width: 473px; */
+    height: 18px;
+    /* margin: 0 5px 0 0; */
+    /* padding: 0 13px 0 13.9px; */
+    /* border-radius: 3px; */
+    /* border: solid 1px #dcdcdc; */
+    /* background-color: #fff; */
+    position: absolute;
+    /* bottom: -45px; */
+    right: 75px;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
+    border: 0 none;
+    border: 1px solid #1E2E6F;
+    min-width: 1.2rem;
+    height: 1.2rem;
+    margin: 0.143rem;
+    transition: box-shadow 0.2s;
+    border-radius: 0;
+    font-size: 11px;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background-color: #1E2E6F !important;
+    color: white !important;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-first,
+:host ::ng-deep .p-paginator .p-paginator-prev,
+:host ::ng-deep .p-paginator .p-paginator-next,
+:host ::ng-deep .p-paginator .p-paginator-last {
+    min-width: 1.5rem;
+}
+
+::ng-deep .p-paginator .p-paginator-current {
+    position: fixed;
+    left: 34px !important;
+    font-size: 14px !important;
+}
+
+.go {
+    margin-top: -10px;
+    position: absolute;
+    right: -66px;
+    width: 22px;
+    height: 22px;
+    text-align: center;
+    border-radius: 3px;
+    background-color: #1E2E6F;
+    border: none;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 450;
+}
+
+.goInp {
+    margin-top: -10px;
+    position: absolute;
+    right: -40px;
+    width: 22px;
+    height: 22px;
+    border-radius: 3px;
+    border: none;
+    border: 1px solid black;
+    font-size: 12px;
+    padding-left: 5px;
 }

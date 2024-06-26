@@ -30,14 +30,16 @@
     margin-top: 10px;
     border-radius: 7px;
     padding: 5px 0px;
+    height: 34px;
+    font-size: 13px;
   }
   .createAccForm {
     width: 460px; 
     padding: 5px 60px;
   }
-  .createAccLink{
+  .login{
     font-weight: 600;
-    font-size: 15px; 
+    font-size: 13px; 
     color: black;
   }
   @media (max-width: 768px) {
@@ -50,4 +52,7 @@
   }
   span{
     color: red;
+  }
+  button[disabled]{
+    background-color: #556294;
   }

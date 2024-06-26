@@ -1,123 +1,165 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ConfigService } from '../../Services/config.service';
 import { ServicesDataService } from '../../Services/servicesData.service';
-import { ConfirmationService, ConfirmEventType, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { NgForm } from '@angular/forms';
+import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
   selector: 'app-services',
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })
-export class ServicesComponent implements OnInit{
+export class ServicesComponent implements OnInit {
 
-  // @ViewChild("servForm") servForm: NgForm
+  @ViewChild("servForm") servForm: NgForm
 
-  companyCode: string = '';
-  serviceName: string;
-  objectName: string;
+  serviceName: string = '';
+  objectName: string = '';
   configData  //database data
   companyNames;
-  companyName
-  uniqueService
+  services
+  servName
+  companyName: string = '';
   serviceKeys
-  serviceslist = [];
+  serviceslist: any[] = [];
   objectList
   servicesAllData//services data..............
-  sidebarVisible: boolean;
-  // serviceValues
+  sidebarVisible: boolean = true;
   countedServices
-  uniqueServiceNames
-  serviceDisplayedData
-  selectedServiceValues
-  companyServicesList = []
-  servicesObjectList
+  companyServicesList: any[] = []
   serviceObjectList
-  uniqueServicessss
+  uniqueServices
+  allCompanyNames: any[]
+  position: string;
+  clearServiceDialogVisible: boolean;
+  serviceBoxes: boolean
+  displayServiceDailog: boolean;
+  dataNotFound: boolean = false;
+  filteredCompanies: any[]
+  filteredServices: any[]
+  isLoading: boolean = false;
+  indexToDelete: number;
+  //  inside dialogbox
+  selectedService
+  selectedObject
+  clearObjectDialogVisible: boolean = false
+  selectedObjectValue: string
 
-  constructor(private configService: ConfigService, private serviceData: ServicesDataService, private confirmationService: ConfirmationService, private messageService: MessageService) { }
+  constructor(private configService: ConfigService, private serviceData: ServicesDataService,
+    private messageService: MessageService, private clipboardService: ClipboardService) { }
 
-  ngOnInit(){
+  ngOnInit() {
     this.fetchConfigDetails();
-    this.gettingListOfData()
-    // this.DisplayCounts()
+  }
+
+  // autocomplete filtered companies
+  filterCompany(event) {
+    let filtered: any[] = [];
+    let query = event.query;
+
+    for (let i = 0; i < this.companyNames.length; i++) {
+      let company = this.companyNames[i];
+      if (company.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(company);
+      }
+    }
+    this.filteredCompanies = filtered;
+  }
+  // autocomplete filtered services
+  filterServices(event) {
+    let filtered: any[] = [];
+    let query = event.query;
+
+    for (let i = 0; i < this.servName.length; i++) {
+      let service = this.servName[i];
+      if (service.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(service);
+      }
+    }
+    this.filteredServices = filtered;
   }
 
   fetchConfigDetails() {
-
+    this.isLoading = true;
     this.configService.fetchConfigDetails().subscribe({
       next: (data) => {
         this.configData = data;
-        // console.log(this.configData);
         let company = Object.values(this.configData.filter(conf => conf.id == 'companyNames')[0])
         company.pop();
-        // console.log(company);
         this.companyNames = [...company];
-        // console.log(this.companyNames);
-        
+
+        const serData = this.configData.find(conf => conf.id === 'services');
+        if (serData) {
+          let ser: { name: string, url: string }[] = Object.values(serData);
+          ser.pop();
+          console.log(ser);
+          this.services = [...ser];
+          const serviceOption = this.services.map(item => ({
+            label: item.name,
+            value: item.name
+          }));
+        }
+        this.servName = this.services.map(item => item.name);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     })
   }
 
-  visible: boolean;
-
-    position: string;
-
-    showDialog(position: string) {
-        this.position = position;
-        this.visible = true;
-    }
-
-    deleteUser(id: string){
-      // console.log(id);
-    // this.userDataService.deleteProduct(id);
-    }
-
-    reset(servForm){
-      servForm.reset();
-    }
-
-    search(companyName){
-
-      this.serviceData.getAllServices().subscribe(
-        {next: (data) => {
+  search(companyName, serviceName, objectName, mapName) {
+    this.isLoading = true;
+    this.serviceBoxes = true
+    this.serviceData.getAllServices(companyName, serviceName, objectName, mapName).subscribe(
+      {
+        next: (data) => {
+          this.dataNotFound = false
           this.servicesAllData = data;
           console.log(this.servicesAllData);
-          
+
           this.serviceKeys = Object.keys(this.servicesAllData)
           console.log(this.serviceKeys);
 
-    
-          
-          // console.log(this.companyNames); 
+          this.DisplayCounts()
+          this.gettingListOfData()
+          this.filterServicesByCompany(this.companyName, this.servName)
 
-      // this.DisplayCounts()
-      this.filterServicesByCompany(this.companyName)
-      
-      },
-      error: (error) => {
-        console.log(error);
-        }}
-        )
+        },
+        error: (error) => {
+          console.log(error);
+          this.dataNotFound = true
+          this.serviceBoxes = false
+          this.isLoading = false;
+        },
+        complete: () => {
+          this.isLoading = false;
         }
-        
-        displayServiceDailog: boolean;
-        
-        showServiceDialog(serviceName: string) {
-          this.displayServiceDailog = true;
-          this.filterObjectsByServices(serviceName)
-    }
-    
+      }
+    )
+  }
+
+  showServiceDialog(serviceName: string) {
+    this.displayServiceDailog = true;
+    this.selectedService = serviceName;
+    this.filterObjectsByServices(serviceName)
+    const keyMatches = this.serviceKeys.find(key => key.includes(this.serviceObjectList[0]));
+
+    this.selectedObjectValue = this.servicesAllData[keyMatches]
+    this.selectedObject = this.serviceObjectList[0]
+  }
+
 
   toggleSidebar() {
     this.sidebarVisible = !this.sidebarVisible;
   }
 
-  // Assume this is within your component class
-
   countLengthOfServices(): { [name: string]: number } {
-    let servCount: { [name: string]: number } = {}; 
-  
+    let servCount: { [name: string]: number } = {};
+
     for (let name of this.companyServicesList) {
       if (servCount[name]) {
         servCount[name]++;
@@ -127,109 +169,105 @@ export class ServicesComponent implements OnInit{
     }
     return servCount;
   }
-  
-  gettingListOfData(){
+
+  gettingListOfData() {
     const dataList = this.serviceKeys.map(str => {
-      const trimmedStr = str.substring(1, str.length - 1); // Remove surrounding brackets
-      return trimmedStr.split(', ').map(part => part.trim()); // Split by ', ' and trim spaces
+      const trimmedStr = str.substring(1, str.length - 1);
+      return trimmedStr.split(', ').map(part => part.trim());
     });
-    
-    // Extract the first value from each list
-    this.companyNames = dataList.map(list => list[0]);
+
+    this.allCompanyNames = dataList.map(list => list[0]);
     this.serviceslist = dataList.map(list => list[1]);
     this.objectList = dataList.map(list => list[2]);
   }
   DisplayCounts() {
     this.countedServices = this.countLengthOfServices();
-    // this.uniqueServiceNames = Object.keys(this.countedServices);
   }
 
-  serviceObjectClicked(obj: string) {
+  serviceObjectClicked(obj: string, index: number) {
+    this.selectedObject = obj
     const keyMatches = this.serviceKeys.find(key => key.includes(obj));
     if (keyMatches) {
-      this.selectedServiceValues = this.servicesAllData[keyMatches];
-      console.log(this.selectedServiceValues);
+      this.selectedObjectValue = this.servicesAllData[keyMatches];
+      console.log(this.selectedObjectValue);
     }
   }
-  
-  clearObject() {
-    this.selectedServiceValues = ''; // Clear selected service values
-  }
-  
-
-
-onSubmit(servForm) {
-
-  if(this.companyName != '' && this.companyName != undefined && this.companyName != null){
-  this.search(this.companyName)
+  copyJson(selectedObjectValue) {
+    const jsonString = JSON.stringify(selectedObjectValue, null, 2);
+    this.clipboardService.copyFromContent(jsonString)
+    alert('JSON copied to clipboard!');
   }
 
+  onSubmit(servForm) {
+    if (this.companyName != '' && this.companyName != undefined && this.companyName != null) {
+      let mapName = '';
+      if (this.serviceName !== '') {
+        this.serviceslist.forEach(object => {
+          if (object.name === this.serviceName) {
+            mapName = object.url;
+          }
+        });
+      }
+      this.search(this.companyName, this.serviceName, this.objectName, mapName)
+    }
+  }
+
+  filterServicesByCompany(companyName: string, service: string): void {
+
+    const targetCompany = companyName.trim().toLowerCase();
+
+    const matchingIndices = this.allCompanyNames
+      .map((company, index) => ({ company, index }))
+      .filter(item => item.company.toLowerCase() === targetCompany)
+      .map(item => item.index);
+
+    this.companyServicesList = matchingIndices.map(index => this.serviceslist[index]);
+    console.log(this.companyServicesList);
+
+
+    let mySet: Set<number> = new Set(this.companyServicesList);
+
+    this.uniqueServices = [...mySet.keys()];
+    console.log(this.uniqueServices);
+
+    this.DisplayCounts()
+  }
+
+  filterObjectsByServices(service: string): void {
+    const targetServices = service.trim().toLowerCase();
+    const matchingIndices = this.serviceslist
+      .map((service, index) => ({ service, index }))
+      .filter(item => targetServices.includes(item.service.toLowerCase()))
+      .map(item => item.index);
+    // Display all services of the matched companies
+    this.serviceObjectList = matchingIndices.map(index => this.objectList[index]);
+    console.log(this.serviceObjectList);
+  }
+  showServiceClearDialog(position: string, index: number) {
+    this.position = position
+    this.clearServiceDialogVisible = true;
+    this.indexToDelete = index;
+  }
+
+  serviceDelete() {
+    if (this.indexToDelete !== null && this.indexToDelete !== undefined) {
+      this.uniqueServices.splice(this.indexToDelete, 1);
+      this.clearServiceDialogVisible = false;
+      this.indexToDelete = null;
+      this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
+    }
+  }
+
+  showObjectClearDialog(position: string) {
+    this.position = position
+    this.clearObjectDialogVisible = true;
+  }
+  clearNo() {
+    this.clearServiceDialogVisible = false;
+    this.clearObjectDialogVisible = false
+  }
+  resetService() {
+    this.serviceBoxes = false
+    this.dataNotFound = false
+  }
 }
-
-filterServicesByCompany(companyName: string): void {
-  // Convert company name to lowercase for case-insensitive comparison
-  const targetCompany = companyName.trim().toLowerCase();
-
-  // Filter indices where company name matches
-  const matchingIndices = this.companyNames
-    .map((company, index) => ({ company, index })) // Map to { company, index }
-    .filter(item => item.company.toLowerCase() === targetCompany) // Filter by company name
-    .map(item => item.index); // Extract indices
-
-  // Display all services of the matched company
-  this.companyServicesList = matchingIndices.map(index => this.serviceslist[index]);
-
-  let mySet: Set<number> = new Set(this.companyServicesList);
-
-this.uniqueServicessss = [...mySet.keys()];
-
-// this.servicesObjectList = this.uniqueServicessss.map(key => key.)
-
-this.DisplayCounts()
-  
-}
-
-filterObjectsByServices(service: string): void {
-  // Convert company names to lowercase for case-insensitive comparison
-  const targetServices = service.trim().toLowerCase();
-
-  // Filter indices where company names match
-  const matchingIndices = this.uniqueServicessss
-    .map((service, index) => ({ service, index })) // Map to { service, index }
-    .filter(item => targetServices.includes(item.service.toLowerCase())) 
-    .map(item => item.index); // Extract indices
-
-  // Display all services of the matched companies
-  this.serviceObjectList = matchingIndices.map(index => this.objectList[index]);
-}
-}
-    
-
-
-
-
-          
-          
-          // for (let key of this.serviceKeys) {
-          //   const extractedKey = key.match(/\[(.*?)\,/)?.[1]; // Extract the key part between square brackets and comma
-          
-          //   if (companyName === this.companyNames) {
-          //     const servicesValues = this.serviceKeys.map(key => key.split(', ')[1]); // Create an array of service values
-          //     this.serviceslist = servicesValues;
-          //   }
-          // }
-
-          // this.serviceValues = Object.values(this.servicesAllData)
-
-        //   const servicesValues = this.serviceKeys.map(key => {
-        //     const keyArray = key.split(', '); // Split the key into an array
-        //     return keyArray[1]
-        // });
-        // this.serviceslist = servicesValues;
-        // console.log(this.serviceslist);
-
-      //   const objectValues = this.serviceKeys.map(key => {
-      //     const keyArray = key.split(', '); // Split the key into an array
-      //    return keyArray[2];
-      // });
-      // this.objectList = objectValues

@@ -1,64 +1,35 @@
 <app-header></app-header>
 
-<div class="container">
-    <p-card>
-        <form [formGroup]="cardForm" (ngSubmit)="onSubmit()">
-            <div class="form-group">
-                <label for="envir">Environment*</label>
-                <p-dropdown 
-                    formControlName="environment" 
-                    [options]="environmentOptions" 
-                    [style]="{'width': '100%', 'height': '40px'}">
-                </p-dropdown>
-                <!-- <p-dropdown formControlName="environment" [options]="envName" [style]="{'width': '100%', 'height': '40px'}"></p-dropdown> -->
-                <div *ngIf="cardForm.controls['environment'].invalid && cardForm.controls['environment'].touched" style="color: red;">
-                    Environment is required
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="input">Token</label>
-                <input 
-                    type="text" 
-                    id="input" 
-                    formControlName="token" 
-                    class="form-control">
-                <!-- <div *ngIf="cardForm.controls['token'].invalid && cardForm.controls['token'].touched" style="color: red;">
-                    Token is required
-                </div> -->
-            </div>
-            <div class="buttons">
-                <button type="button" (click)="cancel()" class="btn btn-cancel">Cancel</button>
-                <button type="submit" [disabled]="cardForm.invalid" class="btn btn-save">Save</button>
-            </div>
-        </form>
-    </p-card>
-</div>
-
-
-
-
-<!-- <app-header></app-header>
-
-<body>
+<div class="body">
     <div class="container" *ngIf="showDialog">
         <p-card>
-            <form #cardForm="ngForm" (ngSubmit)="onSubmit(cardForm)">
+            <form [formGroup]="cardForm" (ngSubmit)="onSubmit()">
                 <div class="form-group">
                     <label for="envir">Environment*</label>
-                    <p-dropdown name="environment" [options]="envName" [style]="{'width': '100%', 'height': '40px'}" required></p-dropdown>
-                    <div *ngIf="cardForm.submitted && !environment" class="error">
+                    <p-dropdown formControlName="environment" [options]="environmentOptions"
+                        [style]="{'width': '100%', 'height': '29px'}">
+                    </p-dropdown>
+                    <div *ngIf="cardForm.controls['environment'].invalid && cardForm.controls['environment'].touched"
+                        style="color: red; font-size: 12px;">
                         Environment is required
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="input">Token*</label>
-                    <input type="text" id="input" name="token" class="form-control">
+                    <label for="input">Token*
+
+                    </label>
+                    <input type="text" id="input" class="form-control" formControlName="servToken" required>
+                    <div *ngIf="cardForm.controls['servToken'].invalid && cardForm.controls['servToken'].touched"
+                        style="color: red; font-size: 12px;">
+                        Token is required
+                    </div>
                 </div>
                 <div class="buttons">
-                    <button type="button" (click)="cancel()" class="btn btn-cancel" (click)="cancel()">Cancel</button>
-                    <button type="submit" class="btn btn-save" [disabled]="cardForm.inva">Save</button>
+                    <button type="button" *ngIf="displayCancelButton" (click)="cancel()"
+                        class="btn btn-cancel">Cancel</button>
+                    <button type="submit" [disabled]="cardForm.invalid" class="btn btn-save">Save</button>
                 </div>
             </form>
         </p-card>
     </div>
-</body> -->
+</div>

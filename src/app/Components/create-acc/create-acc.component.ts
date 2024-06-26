@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../Services/auth.service';
 import { Observable } from 'rxjs';
 import { AuthResponse } from '../../Model/AuthResponse';
@@ -17,16 +17,17 @@ export class CreateAccComponent {
 
   errorMessage: string | null = null; 
   authObs:Observable<AuthResponse>
-  user;
-  signUpUserDetails;
-  signUpSucessfull: boolean = false;
+  user;  //user details - sending data to database
+  signUpUserDetails:any
+  signUpAccountSucessfull: boolean;
 
-  constructor(private authService: AuthService, private router: Router, private dataService: UserDataService) { }
+  constructor(private authService: AuthService, private router: Router, 
+    private dataService: UserDataService) { }
 
   ngOnInit(): void {
     this.createAccountForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [Validators.required, Validators.email, this.customEmailValidator]),
       password: new FormControl('', [Validators.required, Validators.minLength(8)]),
       confirmPassword: new FormControl('', Validators.required),
       userType: new FormControl('user'),
@@ -34,6 +35,19 @@ export class CreateAccComponent {
     }, { validators: this.matchPasswords });
   }
 
+  
+
+  // custom email validators
+  customEmailValidator(control: AbstractControl) {
+    const email = control.value;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (email && !emailPattern.test(email)) {
+      return { invalidEmail: true };
+    }
+    return null;
+  }
+
+  // custom password validators
   matchPasswords(formGroup: FormGroup) {
     const password = formGroup.get('password').value;
     const confirmPassword = formGroup.get('confirmPassword').value;
@@ -46,39 +60,31 @@ export class CreateAccComponent {
         return null;
     }
   }
-
   onSubmit(){
-     
     this.signUpUserDetails = {
       email: this.createAccountForm.value.email,
       password: this.createAccountForm.value.password
     }
-
     this.authObs = this.authService.signUp(this.signUpUserDetails.email, this.signUpUserDetails.password);
 
     this.authObs.subscribe(
         {
           next: (res) => {
             console.log("Success:", res);
-            this.signUpSucessfull = true;
             this.sendDataToDatabase()
+            this.signUpAccountSucessfull = true;
+            alert("SignUp Sucessfull")
             this.router.navigate(['/Login'])
           },
           error: (errMsg) => {
             this.errorMessage = errMsg;
-            this.hideSnackBar();
+            alert(this.errorMessage);
           },
           complete: () => {
             console.log("Observable completed");
           }
         }
       );
-  }
-  
-  hideSnackBar(){
-    setTimeout(() =>{
-      this.errorMessage = null;
-    }, 2000);
   }
 
   sendDataToDatabase(){

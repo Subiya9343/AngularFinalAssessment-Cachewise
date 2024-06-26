@@ -1,91 +1,133 @@
+<app-loader [isVisible]="isLoading"></app-loader>
 <app-header></app-header>
 
-<body>
+<div class="body">
 
     <app-nav-bar></app-nav-bar>
 
 
     <div class="service-container">
+        <p-toast></p-toast>
         <form #serviceForm="ngForm" (ngSubmit)="onSubmit(serviceForm)">
-            <div class="form">
-                <div class="form-group">
+            <div class="gridForm grid">
+                <div class="col-3">
                     <label for="companyCode">Company Code*</label>
-                    <p-dropdown name="companyCode" [(ngModel)]="companyName" [options]="companyNames" [style]="{'width': '20rem', 'height': '26px', 'margin-right': '30px'}" required></p-dropdown>
-                    <div *ngIf="serviceForm.submitted && !companyName" class="error" style="color: red;">
+                    <p-autoComplete name="companyCode" [(ngModel)]="companyName" [dropdown]="true" [appAutofocus]="true"
+                        [suggestions]="filteredCompanies" (completeMethod)="filterCompany($event)"
+                        [style]="{'width': '17rem', 'height': '24px'}" required #companyCode="ngModel"></p-autoComplete>
+                    <div *ngIf="companyCode.invalid && (companyCode.dirty || companyCode.touched)" class="error"
+                        style="color: red; font-size: 12px;">
                         Company Code is required
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="serviceName">Service Name</label>
-                    <p-dropdown name="serviceName" [(ngModel)]="serviceName" [options]="serviceslist" [style]="{'width': '20rem', 'height': '26px', 'margin-right': '30px'}"></p-dropdown>
+                <div class="form-group col-3">
+                    <label for="serviceCode">Service Name</label>
+                    <p-autoComplete name="serviceCode" [(ngModel)]="serviceName" [dropdown]="true"
+                        [suggestions]="filteredServices" (completeMethod)="filterServices($event)"
+                        [style]="{'width': '17rem', 'height': '24px'}" #serviceCode="ngModel"></p-autoComplete>
                 </div>
-                <div class="form-group">
+                <div class="col-3">
                     <label for="objectName">Object Name</label>
-                    <p-dropdown name="objectName" [(ngModel)]="objectName" [options]="objectList" [style]="{'width': '20rem', 'height': '26px', 'margin-right': '30px'}"></p-dropdown>
+                    <input name="objectName" [disabled]="serviceName == null || serviceName == ''"
+                        [(ngModel)]="objectName" class="form-control"
+                        [style]="{'width': '17rem', 'height': '24px', 'margin-right': '30px', 'border-radius': '5px', 'border':'1px solid rgb(160, 162, 163)'}" />
                 </div>
-                <div class="button-container">
-                    <button type="button" class="cancelButton" (click)="reset(serviceForm)">Reset</button>
-                </div>
-                <div class="button-container">
-                    <button type="submit" class="saveButton">Search</button>
+                <div class="button-container col-3">
+                    <button type="reset" class="cancelButton" (click)="resetService()">Reset</button>
+                    <button type="submit" class="saveButton" [disabled]="serviceForm.invalid">Search</button>
                 </div>
             </div>
-            <div class="service-data">
-                <div *ngFor="let ser of uniqueServicessss" class="mx-2 my-2">
+            <div class="col-12 data-not-found-style" *ngIf="dataNotFound">
+                <p>Data not found</p>
+            </div>
+            <div class="service-data" *ngIf="serviceBoxes">
+                <div *ngFor="let ser of uniqueServices, let i of index" class="mx-2 my-2">
                     <p-card>
-                        <div style="padding: 10px 10px;">
-                            <i class="pi pi-ellipsis-v" style="display: flex; justify-content: flex-end;"></i>
-                            <p class="px-4 mb-0">{{ ser }}</p>
-                            <p class="px-4" style="display: flex; justify-content: center; cursor: pointer;" (click)="showServiceDialog(ser)">{{ countedServices[ser]}}</p>
-                            <div style="display: flex; justify-content: flex-end;"><button class="btn btn-save" class="clearButton" (click)="showDialog('top')">Clear</button></div>
-                            
+                        <!-- service cards/boxes -->
+                        <div class="p-2">
+                            <i class="pi pi-ellipsis-v" #ellipsis (click)="op.toggle($event)" label="Confirm"
+                                style="float: right;cursor: pointer;"></i>
+                            <p class="px-4 pt-3 mb-0">{{ ser }}</p>
+                            <p class="px-4" style="display: flex; justify-content: center; cursor: pointer;"
+                                (click)="showServiceDialog(ser)">{{ countedServices[ser]}}</p>
+                            <p-overlayPanel appendTo="body" #op [dismissable]="true">
+                                <div>
+                                    <button class="overlayClearButton" (click)="showServiceClearDialog('top', i)">Clear</button>
+                                </div>
+                            </p-overlayPanel>
                         </div>
+
+                        
                     </p-card>
+
                 </div>
             </div>
         </form>
     </div>
 
-    <!--  delete dialog.............. -->
-    <p-dialog [(visible)]="visible" [position]="position" [style]="{ width: '50vw' }">
-        <div style="padding: 10px 10px;">
-            <div style="display: flex; justify-content: center;"><i class="pi pi-question-circle"></i></div>
-            <p style="display: flex; justify-content: center; margin-top: 5px;">Do You Want to Clear Cache?...</p>
-            <div style="display: flex; justify-content: flex-end;">
-                <button type="button" class="noButton">No</button>
-                <button type="button" class="yesButton">Yes</button>
-            </div>
-        </div>
-    </p-dialog>
 
     <!-- service dialog -->
     <div>
-        <p-dialog header="Service Name" [(visible)]="displayServiceDailog" [style]="{ width: '88vw', height: '500px'}" [draggable]="false">
-            <div style="display: flex;">
-                <!-- sidebar----------------- -->
-                <div class="sidebar" [class.visible]="!sidebarVisible">
-                        <i class="pi pi-angle-left" style=" margin-top: 5px; display: flex; justify-content: flex-end;" (click)="toggleSidebar()"></i>
+        <p-dialog header="{{selectedService}}" [(visible)]="displayServiceDailog" [style]="{ width: '90vw'}"
+            [modal]="true" [draggable]="false">
+            <div class="grid">
+                <div [ngClass]="sidebarVisible ? 'col-4' : 'col-0'" class="dialogSideBar" *ngIf="sidebarVisible">
+                    <div style="position: absolute; top: 16px; right:0px"> <i
+                            class="pi pi-arrow-circle-left left-icon-style" (click)="toggleSidebar()"></i></div>
                     <div>
                         <div *ngFor="let obj of serviceObjectList" class="objectRow">
-                            <tr (click)="serviceObjectClicked(obj)">{{obj}}</tr>
+                            <p class="p-style" [ngClass]="{
+                                'selected': obj === selectedObject
+                              }" (click)="serviceObjectClicked(obj)">{{obj}}</p>
                         </div>
                     </div>
                 </div>
-                <!-- container................ -->
-                <div class="main-content" [class.sidebar-closed]="!sidebarVisible" style="margin-left: -14px; margin-top: -10px;">
-                    <i *ngIf="sidebarVisible" class="pi pi-angle-right" style="border: 1px solid #1E2E6F; border-radius: 50%;" (click)="toggleSidebar()"></i>
-                    <p-card>
-                        <div style="padding: 0px 20px;">
-                            <p>{{ selectedServiceValues | json }}</p>
-                        </div>
-                    </p-card>
+                <div [ngClass]="sidebarVisible ? 'col-8' : 'col-12'" style="height: 78vh; overflow-y: auto;">
+                    <i *ngIf="!sidebarVisible" class="pi pi-arrow-circle-right right-icon-style"
+                        (click)="toggleSidebar()"></i>
+                    <div class="serviceDialogData">
+                        <p-card>
+                            <i class="pi pi-copy" (click)="copyJson(selectedObjectValue)"></i>
+                            <div class="p-3">
+                                <pre>{{ selectedObjectValue | json }}</pre>
+                            </div>
+                        </p-card>
+
+                    </div>
                 </div>
             </div>
-            <div style="display: flex; justify-content: flex-end; margin-right: 18px;">
-                <button class="clearDialogButton" (click)="clearObject()">Clear</button>
-            </div>
+            <p-footer>
+                <!-- Optional footer content -->
+                <button type="button" pButton label="Clear" class="ui-button-secondary"
+                    (click)="showObjectClearDialog('top')"></button>
+            </p-footer>
         </p-dialog>
     </div>
-    
-    
-</body>
+
+    <!--  delete service dialog.............. -->
+    <p-dialog [(visible)]="clearServiceDialogVisible" [position]="position" [style]="{'margin-top.px': 60}" [modal]="true">
+        <div style="padding: 7px 10px;">
+            <div style="display: flex; justify-content: center;"><i class="pi pi-question-circle"></i></div>
+            <p style="display: flex; justify-content: center; margin-top: 5px;">Do You Want to
+                Clear Service?</p>
+            <div style="display: flex; justify-content: flex-end;">
+                <button type="button" class="noButton" (click)="clearNo()">No</button>
+                <button type="button" class="yesButton"
+                    (click)="serviceDelete()">Yes</button>
+            </div>
+        </div>
+    </p-dialog>
+    <!--  delete object dialog.............. -->
+    <p-dialog [(visible)]="clearObjectDialogVisible" [position]="position" [style]="{'margin-top.px': 60}" [modal]="true">
+        <div style="padding: 7px 10px;">
+            <div style="display: flex; justify-content: center;"><i class="pi pi-question-circle"></i></div>
+            <p style="display: flex; justify-content: center; margin-top: 5px;">Do You Want to
+                Clear Object?</p>
+            <div style="display: flex; justify-content: flex-end;">
+                <button type="button" class="noButton" (click)="clearNo()">No</button>
+                <button type="button" class="yesButton"
+                    >Yes</button>
+            </div>
+        </div>
+    </p-dialog>
+</div>
